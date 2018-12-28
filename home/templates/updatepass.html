@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  <meta name="viewport" content="width=device-width">
+  <title>Sign in page</title>
+</head>
+
+<body class="page-responsive min-width-0 session-authentication">
+
+  <div class="container clearfix width-full text-center" style="margin-top:5%;">
+      <img src="{% static 'images/logo.png' %}" style="width:100px;height:80px;">
+  </div>
+
+  <div class="auth-form px-3">
+
+
+    <form method="post" action="{% url 'updatepass' %}">{% csrf_token %}
+      <div class="auth-form-body mt-3">
+
+        <label>New Password</label>
+        <input type="password" name="pass1" class="form-control input-block" tabindex="1" autocapitalize="off" autocorrect="off" autofocus="autofocus" required />
+
+         <label>Confirm Password</label>
+         <input type="password" name="pass2" class="form-control input-block" tabindex="2" required/>
+
+          <input type="submit" value="Change Password" tabindex="3" class="btn btn-primary btn-block"  />
+        </div>
+      </form>
+
+      {% if messages %}
+            {% for message in messages %}
+                <center><p style="color: red">{{message }}</p></center>
+            {% endfor %}
+      {% endif %}
+
+    </div>
+  </body>
+</html>

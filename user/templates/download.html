@@ -1,0 +1,66 @@
+{% include 'common/top.html' %}
+
+    <!--Breadcrumb Start-->
+    <section id="breadcrumb">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li class="active">Download</li>
+        </ol>
+      </div>
+    </section>
+    <!--Breadcrumb End-->
+
+    <section id="main">
+      <div class="container">
+        <div class="row">
+
+            {% include 'common/left.html' %}
+
+          <div class="col-md-9">
+              <!-- File List -->
+              <div class="panel panel-default">
+                <div class="panel-heading main-color-bg">
+                  <h3 class="panel-title ">Download Files</h3>
+                </div>
+                <div class="panel-body">
+                {% if list %}
+                    <table class="table table-striped table-hover">
+                    <tr>
+                        <th>FileName </th>
+                        <th>Enc Key</th>
+                        <th>Action </th>
+                    </tr>
+                    {%for file in list %}
+                      <form method="post">{% csrf_token %}
+                          <tr>
+                            <td><input size="50" name="filename" readonly value="{{file}}" style="border: none; background: transparent"></td>
+                            <td><input name="enckey" type="number" max="255" min="0" required/></td>
+                            <td><button type="submit" class="btn btn-ms btn-danger">Download</button></td>
+                          </tr>
+                      </form>
+                    {%endfor%}
+                    </table>
+                    {% else %}
+                        <h4>No file to Download</h4>
+                    {% endif %}
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {% if messages %}
+        <script>
+            function myFunction() {
+                {% for message in messages %}
+                      alert("{{ message }}");
+                {% endfor %}
+            }
+            myFunction()
+        </script>
+    {% endif %}
+
+
+{% include 'common/foot.html' %}

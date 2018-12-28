@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User | Dashboard</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard_style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+<!-- NAVBAR STARTS-->
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'dashboard' %}">User Pannel</a>
+      </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse " id="navbar-collapse-1">
+          <!-- <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form> -->
+
+          <ul class="nav navbar-nav navbar-right">
+              <li><a type="button" data-toggle="modal" data-target="#sendMail">Send Mail</a></li>
+              <li><a href="#">Message</a></li>
+              <li><a href="#">Notification</a></li>
+              <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ request.session.username }}
+                  <img src="{% static 'img/user.png' %}" class="user-logo"><b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                  <li><a href="#">My Profile</a></li>
+                  <li><a href="{% url 'chngpass' %}">Change Password</a></li>
+                  <li class="divider"></li>
+                  <li><a href="{% url 'logoutview' %}">Log out</a></li>
+              </ul>
+              </li>
+          </ul>
+      </div><!-- /.navbar-collapse -->
+</nav>
+<!--NAVBAR END-->
+
+
+
+    <!-- Modals -->
+    <!-- Send Mail -->
+<div class="modal fade" id="sendMail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form method="post" action="#">{% csrf_token %}
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Send Mail</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>To</label>
+          <input type="text" class="form-control" placeholder="To mail id">
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" class="form-control" placeholder="Subject">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="editor1" class="form-control" placeholder="Mail Body" cols="30" rows="10"></textarea>
+          <input type="file" name="file" >
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>

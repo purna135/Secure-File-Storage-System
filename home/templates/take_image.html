@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+      {% load static %}
+      <meta  charset="utf-8"/>
+      <title>Give a snapshot</title>
+      <script type="text/javascript" src="{% static 'js/myscript.js' %}"></script>
+  </head>
+
+  <body onload="init();">
+    <center><h2>Image Verification Page</h2>
+    {% if messages %}
+        <ul class="message">
+        {% for message in messages %}
+            <li class="error"><p style="color: red">{{ message }}</p></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    Click on the Start WebCam button.
+
+    <p>
+    <button onclick="startWebcam();">Start WebCam</button>
+    <button onclick="snapshot();" id="snap" disabled>Take Snapshot</button>
+    </p>
+
+    <video onclick="snapshot(this);" width=400 height=400 id="video" autoplay></video>
+    <br>
+	<canvas  id="myCanvas" width="400" height="300"></canvas>
+
+    <form method="post" action="saveimg" id="form">
+        {% csrf_token %}
+        <input type="text" id="mytext" name="imagedata" hidden="hidden">
+        <center><button id="form_button" hidden >Submit</button></center>
+    </form>
+    </center>
+  </body>
+</html>

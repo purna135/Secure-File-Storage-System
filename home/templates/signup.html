@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  <meta name="viewport" content="width=device-width">
+  <title>Welcome to Litindia</title>
+</head>
+
+<body class="page-responsive min-width-0 session-authentication">
+
+  <div class="container clearfix width-full text-center" style="margin-top:3%;">
+      <img src="{% static 'images/logo.png' %}" style="width:80px;height:75px;">
+  </div>
+
+  <div class="auth-form px-10" >
+    <div class="auth-form-header p-0">
+        <h1>Please Sign up</h1>
+    </div>
+    <form method="post">{% csrf_token %}
+      <div class="auth-form-body mt-3">
+          {{ form.management_form }}
+            {% for field in form %}
+                <label>{{ field.label_tag }}</label>
+                {{ field }}
+
+                {% for error in field.errors %}
+                    <p style="color: red">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+
+          <input type="submit" value="Sign up" tabindex="3" class="btn btn-primary btn-block"  />
+        </div>
+      </form>
+
+      <p class="create-account-callout mt-3">
+          Have a account? <a href="{% url 'signinview' %}">Sign in Here</a>.
+      </p>
+    </div>
+  </body>
+</html>

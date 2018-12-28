@@ -1,0 +1,53 @@
+{% include 'common/top.html' %}
+
+  <!--Breadcrumb Start-->
+    <section id="breadcrumb">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li class="active">File Upload</li>
+        </ol>
+      </div>
+    </section>
+    <!--Breadcrumb End-->
+
+    <section id="main">
+      <div class="container">
+        <div class="row">
+            {% include 'common/left.html' %}
+             <!-- Upload -->
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-heading main-color-bg">
+                        <h3 class="panel-title">Upload Your File</h3>
+                    </div>
+                    <div class="panel-body">
+	                    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group files">
+                                <input type="file" name="myfile" class="form-control">
+                            </div>
+                            <center>
+                                <label>Encription Key</label>
+                                <input type="number" name="enckey" min="0" max="255" required><hr>
+                                <button class="btn btn-lg btn-primary" style="padding: 10px 50px;">Upload</button>
+                            </center>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    {% if messages %}
+        <script>
+            function myFunction() {
+                {% for message in messages %}
+                      alert("{{ message }}");
+                {% endfor %}
+            }
+            myFunction()
+        </script>
+    {% endif %}
+
+{% include 'common/foot.html' %}
