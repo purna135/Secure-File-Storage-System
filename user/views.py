@@ -15,6 +15,7 @@ from . import encdec
 from home.models import myuser
 import os
 import time
+from django.core.mail import EmailMessage
 # Create your views here.
 
 
@@ -39,7 +40,6 @@ def dashboard(request):
     path = 'media/' + user
     filelist = os.listdir(path)
     filestorage = counter(filelist)
-    print(filestorage)
     return render(request, 'dashboard.html', {'list': filelist, 'filestorage':filestorage})
 
 
@@ -135,6 +135,23 @@ def chngpass(request):
             messages.error(request, 'Password Mismatch')
     return render(request, 'chngpass.html')
 
+
+def sendmail(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            to_mail = request.POST['tomail']
+            subject = request.POST['subject']
+            message = request.POST['mailbody']
+            email = EmailMessage(subject=subject,body=message,to=[to_mail])
+            try:
+                email.send()
+            except:
+                messages.error(request,"Mail can not send")
+            else:
+                messages.success(request, "The Email has successfully sent")
+        return HttpResponseRedirect(reverse('dashboard'))
+    else :
+        return HttpResponseRedirect(reverse('indexview'))
 
 def profile(request):
     

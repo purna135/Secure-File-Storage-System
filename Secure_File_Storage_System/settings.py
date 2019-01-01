@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from django.conf.global_settings import EMAIL_HOST,EMAIL_HOST_PASSWORD,EMAIL_HOST_USER, EMAIL_PORT
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +27,11 @@ SECRET_KEY = '@$($)pob6b$m%)=7fj0_3+n9ksy1fxg$%5qlz)t6)qr6w(4p59'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'purnachandraman@gmail.com'
+EMAIL_HOST_PASSWORD = 'pcm@135$'
+EMAIL_PORT = 587
 
 # Application definition
 

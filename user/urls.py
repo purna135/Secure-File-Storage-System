@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^dashboard/download/$', userview.download, name='download'),
     url(r'^dashboard/history/$', userview.history, name='history'),
     url(r'^dashboard/history/clear$', userview.clear_history, name='clear_history'),
-    url(r'^dashboard/chngpass/$', userview.chngpass, name='chngpass')
+    url(r'^dashboard/chngpass/$', userview.chngpass, name='chngpass'),
+    url(r'^dashboard/sendmail/$', userview.sendmail, name='sendmail')
 ]

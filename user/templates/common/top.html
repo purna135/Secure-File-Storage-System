@@ -60,7 +60,7 @@
 <div class="modal fade" id="sendMail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form method="post" action="#">{% csrf_token %}
+      <form method="post" action="{% url 'sendmail' %}">{% csrf_token %}
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -70,16 +70,15 @@
       <div class="modal-body">
         <div class="form-group">
           <label>To</label>
-          <input type="text" class="form-control" placeholder="To mail id">
+          <input type="email" class="form-control" name="tomail" placeholder="To mail id" required>
         </div>
         <div class="form-group">
           <label>Subject</label>
-          <input type="text" class="form-control" placeholder="Subject">
+          <input type="text" class="form-control" name="subject" placeholder="Subject">
         </div>
         <div class="form-group">
           <label>Message</label>
-          <textarea name="editor1" class="form-control" placeholder="Mail Body" cols="30" rows="10"></textarea>
-          <input type="file" name="file" >
+          <textarea name="mailbody" class="form-control" placeholder="Mail Body" cols="30" rows="10"></textarea>
         </div>
       </div>
 
