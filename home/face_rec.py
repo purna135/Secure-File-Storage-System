@@ -2,9 +2,6 @@ import face_recognition
 
 def face_validation(image):
     train_image = face_recognition.load_image_file(image)
-    # try:
-    #     face_recognition.face_encodings(train_image)[0]
-    # except IndexError:
     l = face_recognition.face_encodings(train_image)
     if len(l) == 1:
         return True

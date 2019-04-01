@@ -64,6 +64,8 @@ def save_image ( request ):
         user = request.session['username']
         with open(r'images/train/{}.jpg'.format(user), 'wb') as f:
             f.write(image_data)
+        with open(r'user/static/img/{}.jpg'.format(user), 'wb') as f:
+            f.write(image_data)   
 
         if face_validation(r'images/train/{}.jpg'.format(user)):
             del user

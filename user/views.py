@@ -1,15 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
 from django.urls import reverse
-# from .forms import *
-from django.contrib import auth
 from django.contrib import messages
-from os import system
-import re
 import base64
-import face_recognition
 from django.shortcuts import render
-from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from . import encdec
 from home.models import myuser
@@ -154,8 +147,25 @@ def sendmail(request):
         return HttpResponseRedirect(reverse('indexview'))
 
 def profile(request):
-    
-    return render(request, 'profile.html')
+    if request.method == 'POST':
+        username = request.POST['user']
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        email = request.POST['email']
+        user = myuser.objects.get(Username = request.session['username'])
+        user.Username=username
+        user.Email = email
+        user.FirstName = fname
+        user.LastName = lname
+        user.save()
+        request.session['username'] = username
+    user = myuser.objects.get(Username = request.session['username'])
+    username = user.Username
+    email = user.Email
+    fname= user.FirstName
+    lname = user.LastName
+    data = {"username":username, "email":email, "fname":fname, "lname":lname}
+    return render(request, 'profile.html', data)
 
 
 def counter(path):
