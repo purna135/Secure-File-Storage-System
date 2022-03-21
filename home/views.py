@@ -33,7 +33,7 @@ def signupview(request):
         if form.is_valid():
             form.save()
             request.session['username'] = form.cleaned_data['Username']
-            system('mkdir media\{}'.format(request.session['username']))
+            system(f"mkdir media\\{request.session['username']}")
             return render(request, 'take_image.html')
     else:
         form = RegForm()
@@ -50,7 +50,7 @@ def logoutview(request):
     return HttpResponseRedirect(reverse('indexview'))
 
 
-def save_image ( request ):
+def save_image( request ):
     if request.method != 'POST':
         return HttpResponseRedirect(reverse('signupview'))
 
@@ -62,60 +62,60 @@ def save_image ( request ):
 
     if request.resolver_match.url_name == 'signup_save_img':
         user = request.session['username']
-        with open(r'images/train/{}.jpg'.format(user), 'wb') as f:
+        with open(f'images/train/{user}.jpg', 'wb') as f:
             f.write(image_data)
-        with open(r'user/static/img/{}.jpg'.format(user), 'wb') as f:
+        with open(f'user/static/img/{user}.jpg', 'wb') as f:
             f.write(image_data)   
 
-        if face_validation(r'images/train/{}.jpg'.format(user)):
+        if face_validation(f'images/train/{user}.jpg'):
             del user
             return render(request, 'index.html', {'mess': 'success'})
         else:
-            system ( r'del images\train\{}.jpg'.format(user))
+            system(f'del images\\train\\{user}.jpg')
             messages.error(request, "We cann't not recognise your face")
             messages.error(request, "Please take a another pic having your face only...")
             return render(request, 'take_image.html')
 
     if request.resolver_match.url_name == 'signin_save_img':
         user = request.session['username']
-        with open(r'images/test/{}.jpg'.format(user), 'wb') as f:
+        with open(f'images/test/{user}.jpg', 'wb') as f:
             f.write(image_data)
 
-        if face_validation(r'images/test/{}.jpg'.format(user)):
-            known_face = r'images/train/{}.jpg'.format(user)
-            unknown_face = r'images/test/{}.jpg'.format(user)
+        if face_validation(f'images/test/{user}.jpg'):
+            known_face = f'images/train/{user}.jpg'
+            unknown_face = f'images/test/{user}.jpg'
 
             if match_face(known_face, unknown_face):
-                system(r'del images\test\{}.jpg'.format(user))
+                system(f'del images\\test\\{user}.jpg')
                 return HttpResponseRedirect(reverse('dashboard'))
             else:
-                system(r'del images\test\{}.jpg'.format(user))
+                system(f'del images\\test\\{user}.jpg')
                 messages.error(request, "Face does not match...")
                 return render(request, 'take_image.html')
         else:
-            system(r'del images\test\{}.jpg'.format(user))
+            system(f'del images\\test\\{user}.jpg')
             messages.error(request, "We cann't not recognise your face")
             messages.error(request, "Please take a another pic having your face only...")
             return render(request, 'take_image.html')
 
     if request.resolver_match.url_name == 'changepass_save_img':
         user = request.session['username']
-        with open(r'images/test/{}.jpg'.format(user), 'wb') as f:
+        with open(f'images/test/{user}.jpg', 'wb') as f:
             f.write(image_data)
 
-        if face_validation(r'images/test/{}.jpg'.format(user)):
-            known_face = r'images/train/{}.jpg'.format(user)
-            unknown_face = r'images/test/{}.jpg'.format(user)
+        if face_validation(f'images/test/{user}.jpg'):
+            known_face = f'images/train/{user}.jpg'
+            unknown_face = f'images/test/{user}.jpg'
 
             if match_face(known_face, unknown_face):
-                system(r'del images\test\{}.jpg'.format(user))
+                system(f'del images\\test\\{user}.jpg')
                 return HttpResponseRedirect(reverse('updatepass'))
             else:
-                system(r'del images\test\{}.jpg'.format(user))
+                system(f'del images\\test\\{user}.jpg')
                 messages.error(request, "Face does not match...")
                 return render(request, 'take_image.html')
         else:
-            system(r'del images\test\{}.jpg'.format(user))
+            system(f'del images\\test\\{user}.jpg')
             messages.error(request, "We cann't not recognise your face")
             messages.error(request, "Please take a another pic having your face only...")
             return render(request, 'take_image.html')
