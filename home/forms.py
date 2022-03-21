@@ -36,13 +36,12 @@ class RegForm ( forms . ModelForm):
     def clean_Confirm_Password(self):
         pass1 = self.cleaned_data['Password']
         pass2 = self.cleaned_data['Confirm_Password']
-        MAX_LEN = 8
         if pass1 and pass2:
             if pass1 != pass2:
                 raise forms.ValidationError("Two passwords not same")
-            else:
-                if len(pass1) < MAX_LEN:
-                    raise forms.ValidationError("Password should be %d characters" %MAX_LEN)
-                if pass1.isdigit():
-                    raise forms.ValidationError("Password should not all numeric")
+            MAX_LEN = 8
+            if len(pass1) < MAX_LEN:
+                raise forms.ValidationError("Password should be %d characters" %MAX_LEN)
+            if pass1.isdigit():
+                raise forms.ValidationError("Password should not all numeric")
 

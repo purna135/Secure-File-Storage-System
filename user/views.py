@@ -16,13 +16,12 @@ def dashboard(request):
     if request.method == 'POST':
         filename = request.POST['filename']
         enckey = request.POST['enckey']
-        file_path = 'media\{}\{}'.format(request.session['username'], filename)
-        fd = open(file_path, 'rb')
-        data = fd.read()
-        fd.close()
+        file_path = f"media\\{request.session['username']}\\{filename}"
+        with open(file_path, 'rb') as fd:
+            data = fd.read()
         data = base64.b64decode(data)
         if chr(data[0]) == chr(int(enckey)):
-            os.system('del "{}"'.format(file_path))
+            os.system(f'del "{file_path}"')
             messages.success(request, "File deleted successfully...")
         else:
             messages.error(request, "Enc Key mismatch. Cann't delete file...")
@@ -30,7 +29,7 @@ def dashboard(request):
         user = request.session['username']
     except KeyError:
         return HttpResponseRedirect(reverse('indexview'))
-    path = 'media/' + user
+    path = f'media/{user}'
     filelist = os.listdir(path)
     filestorage = counter(filelist)
     return render(request, 'dashboard.html', {'list': filelist, 'filestorage':filestorage})
@@ -41,17 +40,22 @@ def upload(request):
         user = request.session['username']
         myfile = request.FILES['myfile']
         fs = FileSystemStorage()
-        if os.path.exists('media/{}/{}'.format(user, myfile.name)):
-            x = os.getcwd() +'\\media\\{}\\{}'.format(user, myfile.name)
+        if os.path.exists(f'media/{user}/{myfile.name}'):
+            x = os.getcwd() + f'\\media\\{user}\\{myfile.name}'
             os.system('del "' + x + '"')
-        filename = fs.save("media/{}/{}".format(user, myfile.name), myfile)
+        filename = fs.save(f"media/{user}/{myfile.name}", myfile)
         encdec.encryption( filename , request.POST ['enckey'])
         rec = myuser.objects.filter( Username = user)
 
-        if rec[0].history == None or rec[0].history == [['None']]:
-            newhistory =  myfile.name +' saved on' + str (time.ctime())
+        if rec[0].history is None or rec[0].history == [['None']]:
+            newhistory = f'{myfile.name} saved on{str(time.ctime())}'
         else:
-            newhistory =  myfile.name +' saved on' + str(time.ctime ()) + '\n' + rec[0].history
+            newhistory = (
+                f'{myfile.name} saved on{str(time.ctime ())}'
+                + '\n'
+                + rec[0].history
+            )
+
 
         myuser.objects.filter( Username = user).update(history = newhistory)
         messages.success(request, "File Uploaded Successfully")
@@ -67,7 +71,7 @@ def download(request):
     if request.method == 'POST':
         filename = request.POST['filename']
         enckey = request.POST['enckey']
-        file_path = 'media/{}/{}'.format(request.session['username'], filename)
+        file_path = f"media/{request.session['username']}/{filename}"
         if(encdec . decryption ( file_path , enckey )):
             with open(file_path, 'rb') as fh:
                 response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
@@ -76,9 +80,9 @@ def download(request):
         else:
             messages.error(request, 'Invalid encryption key. Please provide a right key...')
             return HttpResponseRedirect(reverse('download'))
-    elif 'username' in request . session :
+    elif 'username' in request . session:
         user = request.session['username']
-        path = 'media/' + user
+        path = f'media/{user}'
         filelist = os.listdir(path)
         return render (request , 'download.html', {'list' : filelist})
     else:
@@ -87,22 +91,20 @@ def download(request):
 
 
 def history(request):
-    if 'username' in request.session:
-        rec = myuser.objects.filter(Username = request.session['username'])
-        history = rec[0].history
-
-        if history != None and history != '':
-            history = history.split('\n')
-            history = [ x.split ('saved on') for x in history ]
-
-            for x  in history :
-                x [ 0 ] = x[ 0 ]. replace ( request.session['username'] +'/', '')
-
-            return render (request , 'history.html', {'history': history})
-        else:
-            return render ( request, 'history.html')
-    else :
+    if 'username' not in request.session:
         return HttpResponseRedirect(reverse('indexview'))
+    rec = myuser.objects.filter(Username = request.session['username'])
+    history = rec[0].history
+
+    if history in [None, '']:
+        return render ( request, 'history.html')
+    history = history.split('\n')
+    history = [ x.split ('saved on') for x in history ]
+
+    for x  in history :
+        x [ 0 ] = x[ 0 ]. replace ( request.session['username'] +'/', '')
+
+    return render (request , 'history.html', {'history': history})
 
 
 def clear_history(request):
@@ -130,21 +132,20 @@ def chngpass(request):
 
 
 def sendmail(request):
-    if 'username' in request.session:
-        if request.method == 'POST':
-            to_mail = request.POST['tomail']
-            subject = request.POST['subject']
-            message = request.POST['mailbody']
-            email = EmailMessage(subject=subject,body=message,to=[to_mail])
-            try:
-                email.send()
-            except:
-                messages.error(request,"Mail can not send")
-            else:
-                messages.success(request, "The Email has successfully sent")
-        return HttpResponseRedirect(reverse('dashboard'))
-    else :
+    if 'username' not in request.session:
         return HttpResponseRedirect(reverse('indexview'))
+    if request.method == 'POST':
+        to_mail = request.POST['tomail']
+        subject = request.POST['subject']
+        message = request.POST['mailbody']
+        email = EmailMessage(subject=subject,body=message,to=[to_mail])
+        try:
+            email.send()
+        except:
+            messages.error(request,"Mail can not send")
+        else:
+            messages.success(request, "The Email has successfully sent")
+    return HttpResponseRedirect(reverse('dashboard'))
 
 def profile(request):
     if request.method == 'POST':
@@ -181,5 +182,4 @@ def counter(path):
     mCount = len([file for mEx in music for file in path if file.lower().endswith(mEx)])
     vCount = len([file for vEx in video for file in path if file.lower().endswith(vEx)])
 
-    list = {'image':imgCount, 'document':docCount, 'video':vCount, 'music':mCount}
-    return list
+    return {'image':imgCount, 'document':docCount, 'video':vCount, 'music':mCount}
